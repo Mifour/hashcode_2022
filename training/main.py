@@ -1,27 +1,38 @@
 from collections import Counter
-import sys
+from lib import Problem
+from random import random
 
 
-def load(filepath):
-    with open(filepath, "r") as file:
-        data = file.readlines()
+class TrainingProblem(Problem):
+    def load_problem(self, path):
+        with open(path, "r") as file:
+            data = file.readlines()
 
-    return [
-        [
-            like.strip().split()[1:],
-            dislike.strip().split()[1:],
-        ] for like, dislike in zip(data[1::2], data[2::2])]
+        return [
+            [
+                like.strip().split()[1:],
+                dislike.strip().split()[1:],
+            ] for like, dislike in zip(data[1::2], data[2::2])]
+
+    def score(self, solution, problem):
+        solution = set(solution)
+
+        return sum(
+            set(like).issubset(solution) and set(dislike).isdisjoint(solution)
+            for like, dislike in problem
+        )
+
+    def encode_solution(self, solution):
+        return str(len(solution)) + " "+" ".join(solution)
+
+    def decode_solution(self, raw):
+        return raw.strip().split()[1:]
 
 
-def write_answer(answer):
-    buffer = str(len(answer)) + " "+" ".join(answer)
-    sys.stdout.buffer.write(buffer.encode())
-
-
-def solve(inputs):
+def solver(problem):
     likes = Counter()
     dislikes = Counter()
-    for like, dislike in inputs:
+    for like, dislike in problem:
         likes.update(like)
         dislikes.update(dislike)
 
@@ -34,16 +45,5 @@ def solve(inputs):
     return to_keep
 
 
-def scoring(inputs, answer):
-    answer = set(answer)
-
-    return sum(
-        set(like).issubset(answer) and set(dislike).isdisjoint(answer)
-        for like, dislike in inputs
-    )
-
-
-inputs = load("./a_an_example.in.txt")
-answer = solve(inputs)
-print("Answer", answer)
-print("Score", scoring(inputs, answer))
+problem = TrainingProblem()
+problem.test(solver)
