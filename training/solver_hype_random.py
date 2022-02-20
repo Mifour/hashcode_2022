@@ -1,5 +1,5 @@
 from collections import Counter
-from problem import problem
+from challenge import challenge
 from random import random
 
 
@@ -20,4 +20,4 @@ def solver(problem):
     return to_keep
 
 
-problem.test(solver, 50)
+challenge.test(solver, 50)
