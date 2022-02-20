@@ -3,7 +3,7 @@ from abc import ABC, abstractmethod
 import importlib.util
 
 
-class Problem(ABC):
+class Challenge(ABC):
     def __init__(self, path="./") -> None:
         self.path = Path(path)
         self.load_problems()

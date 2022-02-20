@@ -1,7 +1,7 @@
-from lib import Problem
+from lib import Challenge
 
 
-class TrainingProblem(Problem):
+class TrainingChallenge(Challenge):
     def load_problem(self, path):
         with open(path, "r") as file:
             data = file.readlines()
@@ -26,4 +26,4 @@ class TrainingProblem(Problem):
     def decode_solution(self, raw):
         return raw.strip().split()[1:]
 
-problem = TrainingProblem()
+challenge = TrainingChallenge()
