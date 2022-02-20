@@ -14,8 +14,9 @@ def solver(problem):
         key: likes.get(key, 0) - dislikes.get(key, 0)
         for key in ingredients
     }
-    to_keep = [ingredient for ingredient, hype in average.items() if hype+1 > 0]
+    to_keep = [ingredient for ingredient, hype in average.items() if hype > 0]
     return to_keep
 
 
 problem.test(solver)
+print(problem)

@@ -10,7 +10,7 @@ class Problem(ABC):
         self.load_highscores()
 
     def __repr__(self):
-        txt = "HIGHSCORES\n"
+        txt = "\nHIGHSCORES\n"
         for problem in sorted(self.problems):
             txt += f"{problem.ljust(15)} {self.high_scores.get(problem)}\n"
         return txt
