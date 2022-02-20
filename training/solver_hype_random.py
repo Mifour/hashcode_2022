@@ -15,7 +15,6 @@ def solver(problem):
         key: likes.get(key, 0) - dislikes.get(key, 0)
         for key in ingredients
     }
-    coef = random()*5
     to_keep = [ingredient for ingredient, hype in average.items() if hype+random() > 0]
     return to_keep
 
