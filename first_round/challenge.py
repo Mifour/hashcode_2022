@@ -24,7 +24,7 @@ class Round1Challenge(Challenge):
                 "duration": int(duration),
                 "max_score": int(max_score),
                 "best_before": int(best_before),
-                "roles": [] # this is a list to keep order of roles
+                "roles": []  # this is a list to keep order of roles
             }
             for n in range(1, int(n_roles)+1):
                 role, level = data[line+n].split()
@@ -75,9 +75,9 @@ def scoring(problem, solution):
         best_before = project["best_before"]
         duration = project["duration"]
         not_available = [
-            people 
-            for people, list_ranges in available 
-            for period in list_ranges 
+            people
+            for people, list_ranges in available.items()
+            for period in list_ranges
             if people in workers and period.start <= project_date < period.stop
         ]
         while not not_available:
