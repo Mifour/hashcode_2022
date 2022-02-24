@@ -23,12 +23,12 @@ class Round1Challenge(Challenge):
             projects[project_name] = {
                 "duration": int(duration),
                 "max_score": int(max_score),
-                "best_before": best_before,
-                "roles": {}
+                "best_before": int(best_before),
+                "roles": [] # this is a list to keep order of roles
             }
             for n in range(1, int(n_roles)+1):
                 role, level = data[line+n].split()
-                projects[project_name]["roles"][role] = int(level)
+                projects[project_name]["roles"].append({"name": role, "level": int(level)})
             line += n + 1
         return people, projects
 
@@ -60,12 +60,40 @@ print(people)
 
 
 def scoring(problem, solution):
+    total_score = 0
+    available = {p: [] for p in people}
+    # we can determine if project are run in parallele if they are different set of people
+
     for project_name, workers in solution:
         project = projects[project_name]
         print(workers)
         print(project)
+        score = 0
+        initial_award = project["max_score"]
+        best_before = project["best_before"]
+        today = ...
+
 
         max_skill = {}
+        for worker in workers:
+            for skill, score in people[worker].items():
+                if skill not in max_skill or max_skill[skill] < score:
+                    max_skill[skill] = score
+        for i, role in enumerate(project["roles"]):
+            role_name, requirement = role
+            people_name = solution[i]
+            worker = people[people_name]
+            worker_level = worker.get(role_name, 0)
+            if worker_level < requirement - 1:
+                break
+                # too junior
+            elif worker_level == requirement - 1:
+                # need a mentor
+                if max_skill[role_name] < requirement:
+                    break
+        score = max(initial_award -(best_before - today), 0)
+        total_score += score
+
         for worker in workers:
             for skill, score in people[worker].items():
                 if skill not in max_skill or max_skill[skill] < score:
@@ -80,7 +108,7 @@ def scoring(problem, solution):
                     score += 1
 
                 team_skills[worker][skill] = score
-                skill_prevalence[skill] = skill_prevalence.setdefault(skill, 0)+1
+                skill_prevalence[skill] = skill_prevalence.get(skill, 0)+1
         print(skill_prevalence)
         break
 
