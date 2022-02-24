@@ -62,6 +62,7 @@ print(people)
 def scoring(problem, solution):
     total_score = 0
     available = {p: [] for p in people}
+    today = 0
     # we can determine if project are run in parallele if they are different set of people
 
     for project_name, workers in solution:
@@ -69,10 +70,19 @@ def scoring(problem, solution):
         print(workers)
         print(project)
         score = 0
+        project_date = today
         initial_award = project["max_score"]
         best_before = project["best_before"]
-        today = ...
-
+        duration = project["duration"]
+        not_available = [
+            people 
+            for people, list_ranges in available 
+            for period in list_ranges 
+            if people in workers and period.start <= project_date < period.stop
+        ]
+        while not not_available:
+            # need to wait until all liste people are available
+            project_date += 1
 
         max_skill = {}
         for worker in workers:
@@ -85,32 +95,14 @@ def scoring(problem, solution):
             worker = people[people_name]
             worker_level = worker.get(role_name, 0)
             if worker_level < requirement - 1:
-                break
+                return 0
                 # too junior
             elif worker_level == requirement - 1:
                 # need a mentor
                 if max_skill[role_name] < requirement:
-                    break
-        score = max(initial_award -(best_before - today), 0)
+                    return 0
+        score = max(initial_award - min((project_date + duration) - best_before, 0), 0)
         total_score += score
-
-        for worker in workers:
-            for skill, score in people[worker].items():
-                if skill not in max_skill or max_skill[skill] < score:
-                    max_skill[skill] = score
-        team_skills = {}
-        skill_prevalence = {}
-        for worker in workers:
-            team_skills[worker] = {}
-            skills = people[worker].copy()
-            for skill, score in skills.items():
-                if skill in max_skill and max_skill[skill] > score:
-                    score += 1
-
-                team_skills[worker][skill] = score
-                skill_prevalence[skill] = skill_prevalence.get(skill, 0)+1
-        print(skill_prevalence)
-        break
 
 
 print(scoring(problem, solution))
