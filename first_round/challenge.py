@@ -23,15 +23,14 @@ class Round1Challenge(Challenge):
             projects[project_name] = {
                 "duration": int(duration),
                 "max_score": int(max_score),
-                "best_before": best_before, 
-                "roles":{}
+                "best_before": best_before,
+                "roles": {}
             }
             for n in range(1, int(n_roles)+1):
                 role, level = data[line+n].split()
                 projects[project_name]["roles"][role] = int(level)
             line += n + 1
         return people, projects
-
 
     def score(self, solution, problem):
         return 0
@@ -40,6 +39,7 @@ class Round1Challenge(Challenge):
         return str(len(solution))+"\n"+'\n'.join([project+'\n'+' '.join(workers) for project, workers in solution])
 
     def decode_solution(self, raw):
+        raw = raw.split('\n')
         projects = []
         for project, workers in zip(raw[1::2], raw[2::2]):
             workers = workers.split()
@@ -47,6 +47,42 @@ class Round1Challenge(Challenge):
         return projects
 
 
-
 challenge = Round1Challenge()
 
+# Debug
+problem = challenge.problems['a.txt']
+with open('./solutions/a.txt', 'r') as f:
+    solution = challenge.decode_solution(f.read())
+
+
+people, projects = problem
+print(people)
+
+
+def scoring(problem, solution):
+    for project_name, workers in solution:
+        project = projects[project_name]
+        print(workers)
+        print(project)
+
+        max_skill = {}
+        for worker in workers:
+            for skill, score in people[worker].items():
+                if skill not in max_skill or max_skill[skill] < score:
+                    max_skill[skill] = score
+        team_skills = {}
+        skill_prevalence = {}
+        for worker in workers:
+            team_skills[worker] = {}
+            skills = people[worker].copy()
+            for skill, score in skills.items():
+                if skill in max_skill and max_skill[skill] > score:
+                    score += 1
+
+                team_skills[worker][skill] = score
+                skill_prevalence[skill] = skill_prevalence.setdefault(skill, 0)+1
+        print(skill_prevalence)
+        break
+
+
+print(scoring(problem, solution))
