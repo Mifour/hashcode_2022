@@ -34,6 +34,7 @@ def solver():
         roles = []
         assignments = {}
         ... # magically assign roles to people
+        ... # proposed strategy: assign unique competence first, assign the least skilled people that meet the requirements (maybe mentored)
         update_people_skills(assignments, people)
         to_do.remove(project_name)
         answer.append((project_name, roles))
