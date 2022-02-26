@@ -49,14 +49,18 @@ class Round1Challenge(Challenge):
 
 challenge = Round1Challenge()
 
-# Debug
+## Debug
 problem = challenge.problems['a.txt']
-with open('./solutions/a.txt', 'r') as f:
-    solution = challenge.decode_solution(f.read())
+#with open('./solutions/a.txt', 'r') as f:
+#    solution = challenge.decode_solution(f.read())
 
 
 people, projects = problem
-print(people)
+from solver_0 import solver
+answer = solver(problem)
+raw_solution = challenge.encode_solution(answer)
+solution = challenge.decode_solution(raw_solution)
+#print(people)
 
 
 def scoring(problem, solution):
@@ -66,14 +70,11 @@ def scoring(problem, solution):
 
     for project_name, workers in solution:
         project = projects[project_name]
-        print(workers)
-        print(project)
         score = 0
         project_start = 0
         initial_award = project["max_score"]
         best_before = project["best_before"]
         duration = project["duration"]
-        print(available)
         while len([
             people
             for people, list_ranges in available.items()
@@ -108,5 +109,6 @@ def scoring(problem, solution):
     return total_score
 
 
-
-# print(scoring(problem, solution))
+print(raw_solution)
+score = scoring(problem, solution)
+print(f"\n=> {score}")
